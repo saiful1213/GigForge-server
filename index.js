@@ -71,12 +71,39 @@ async function run() {
       })
 
       // get posted job 
-      app.get('/api/v1/jobs/post/:email', async (req, res) =>{
+      app.get('/api/v1/jobs/post/:email', async (req, res) => {
          const email = req.params.email;
          const query = {
             email: email
          }
          const result = await jobCollection.find(query).toArray();
+         res.send(result)
+      })
+
+      // get data for updating
+      app.get('/api/v1/jobs/update/:Id', async (req, res) => {
+         const id = req.params.Id;
+         const query = {
+            _id: new ObjectId(id)
+         }
+         const result = await jobCollection.findOne(query);
+         res.send(result);
+      })
+
+
+
+      // update data
+      app.patch('/api/v1/jobs/updateInfo/:id', async (req, res) => {
+         const id = req.params.id;
+         const updateInfo = req.body;
+
+         const filter = {
+            _id: new ObjectId(id)
+         }
+         const updateDoc = {
+            $set: updateInfo
+         };
+         const result = await jobCollection.updateOne(filter, updateDoc);
          res.send(result)
       })
 
